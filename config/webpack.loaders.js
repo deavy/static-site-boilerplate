@@ -10,13 +10,16 @@ const html = {
   use: [
     {
       loader: 'html-loader',
+      options: {
+        interpolate: true,
+      },
     },
   ],
 };
 
 // Javascript loaders
 const js = {
-  test: /\.js(x)$/,
+  test: /\.js(x)?$/,
   exclude: /node_modules/,
   use: [
     {
@@ -116,21 +119,37 @@ const imageLoader = {
 
 const images = {
   test: /\.(gif|png|jpe?g|svg)$/i,
+  exclude: /fonts/,
   use: [
-    'file-loader?name=images/[name].[ext]?[hash]',
+    'file-loader?name=images/[name].[hash].[ext]',
     config.env === 'production' ? imageLoader : null,
   ].filter(Boolean),
 };
 
 // Font loaders
 const fonts = {
-  test: /\.(woff|woff2|eot|ttf|otf)$/,
+  test: /\.(woff|woff2|eot|ttf|otf|svg)$/,
+  exclude: /images/,
   use: [
     {
       loader: 'file-loader',
       query: {
-        name: '[name].[ext]',
+        name: '[name].[hash].[ext]',
         outputPath: 'fonts/',
+      },
+    },
+  ],
+};
+
+// Video loaders
+const videos = {
+  test: /\.(mp4|webm)$/,
+  use: [
+    {
+      loader: 'file-loader',
+      query: {
+        name: '[name].[hash].[ext]',
+        outputPath: 'images/',
       },
     },
   ],
@@ -144,4 +163,5 @@ module.exports = [
   less,
   images,
   fonts,
+  videos,
 ];
